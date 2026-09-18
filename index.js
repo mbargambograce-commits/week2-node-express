@@ -5,17 +5,14 @@ const path = require('path');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Middleware pour parser le JSON
+//Middleware to parse JSON
 app.use(express.json());
 
-// Bonus: middleware de log
+// Bonus: request middleware to log
 app.use((req, res, next) => {
   console.log(`${new Date().toISOString()} - ${req.method} ${req.url}`);
   next();
 });
-
-// Servir les fichiers statiques du dossier public
-app.use(express.static(path.join(__dirname, 'public')));
 
 // GET /
 app.get('/', (req, res) => {
@@ -31,11 +28,15 @@ app.post('/user', (req, res) => {
   res.send(`Hello, ${name}!`);
 });
 
+
 // GET /user/:id
 app.get('/user/:id', (req, res) => {
   res.send(`User ${req.params.id} profile`);
 });
 
+// Serve static files from the public folder (after the routes)
+app.use(express.static(path.join(__dirname, 'public')));
+
 app.listen(PORT, () => {
-  console.log(`Serveur lancé sur le port ${PORT}`);
+  console.log(`Server running on port ${PORT}`);
 });
